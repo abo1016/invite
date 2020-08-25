@@ -48,14 +48,14 @@
 </template>
 
 <script>
-import HVideo from 'components/video'
+// import HVideo from 'components/video'
 import HForm from 'components/form'
 import HFormlist from 'components/formlist'
 import tools from 'common/js/h_tools'
 export default {
   name: 'Message',
   components: {
-    HVideo,
+    // HVideo,
     HForm,
     HFormlist
   },
@@ -79,6 +79,7 @@ export default {
     that.isForm = false
     that.isFormlist = false
     that.getMessageList()
+    that.getOpenId()
   },
 
   methods: {
@@ -90,10 +91,20 @@ export default {
           success: function (res) {
             that.userInfo = res.userInfo
             that.isOpen = true
-            that.getOpenId()
+            // that.getOpenId()
+            that.getIsExist()
           }
         })
       }
+    },
+
+    showDelete () {
+      const that = this
+      console.log('openid: ' + that.openId)
+      const db = wx.cloud.database()
+      const admin = db.collection('admin')
+      const adminUser = admin.get()
+      console.log(adminUser)
     },
 
     cancel () {
@@ -197,7 +208,8 @@ export default {
         data: {}
       }).then(res => {
         that.openId = res.result.openid
-        that.getIsExist()
+        that.showDelete()
+        // that.getIsExist()
       })
     },
 
