@@ -42,6 +42,7 @@ export default {
 </script>
 
 <style lang="stylus">
+@import '../static/font/iconfont.css'
 page
     height 100%
 image

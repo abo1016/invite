@@ -14,6 +14,7 @@
                         <span class="top-r">{{item.time}}</span>
                     </div>
                     <p class="con">{{item.desc}}</p>
+                    <i v-if="del" class="iconfont icon-ashbin" @tap="delCom(item._id)"></i>
                 </div>
             </div>
             <p class="place-end"></p>
@@ -66,6 +67,7 @@ export default {
       state: '',
       messageList: [],
       openId: '',
+      del: false,
       userInfo: '',
       isForm: false,
       isVideo: false,
@@ -100,11 +102,33 @@ export default {
 
     showDelete () {
       const that = this
-      console.log('openid: ' + that.openId)
+      // console.log('openid: ' + that.openId)
       const db = wx.cloud.database()
       const admin = db.collection('admin')
-      const adminUser = admin.get()
-      console.log(adminUser)
+      admin.get().then(res => {
+        that.admin_openid = res.data[0].admin_openid
+        if (that.admin_openid === that.openId) {
+          that.del = true
+        } else {
+          that.del = false
+        }
+        console.log(that.del)
+      })
+    },
+
+    delCom (id) {
+      const that = this
+      const db = wx.cloud.database()
+      const message = db.collection('message')
+      message.where({
+        _id: id
+      }).update({
+        data: {
+          state: false
+        }
+      }).then(res => {
+        that.getMessageList()
+      })
     },
 
     cancel () {
