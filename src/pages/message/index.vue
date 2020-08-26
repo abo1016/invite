@@ -1,31 +1,45 @@
 <template>
-    <div class="message">
-        <scroll-view
-            scroll-y
-            @scroll="scroll"
-            class="box"
-        >
-            <p class="place"></p>
-            <div class="item" v-for="(item, index) in messageList" :key="index">
-                <image class="left" :src="item.url"/>
-                <div class="right">
-                    <div class="top">
-                        <span class="top-l">{{item.name}}</span>
-                        <span class="top-r">{{item.time}}</span>
-                    </div>
-                    <p class="con">{{item.desc}}</p>
-                    <i v-if="del" class="iconfont icon-ashbin" @tap="delCom(item._id)"></i>
-                </div>
-            </div>
-            <p class="place-end"></p>
-        </scroll-view>
-        <div class="bottom">
-            <button class="left" lang="zh_CN" open-type="getUserInfo" @getuserinfo="toMessage">说点啥吧</button>
-            <button class="right" @tap="toForm">我要出席</button> 
+  <div class="message">
+    <scroll-view scroll-y
+                 @scroll="scroll"
+                 class="box">
+      <p class="place"></p>
+      <div class="item"
+           v-for="(item, index) in messageList"
+           :key="index">
+        <image class="left"
+               :src="item.url" />
+        <div class="right">
+          <div class="top">
+            <span class="top-l">{{item.name}}</span>
+            <span class="top-r">{{item.time}}</span>
+          </div>
+          <p class="con">{{item.desc}}</p>
+          <i v-if="del"
+             class="iconfont icon-ashbin"
+             @tap="delCom(item._id)"></i>
         </div>
-        <div class="dialog" v-show="isOpen">
-            <textarea focus="true" maxlength="80" class="desc" placeholder="在这里输入您想要说的话" name="textarea" placeholder-style="color:#ccc;" v-model="desc"/>
-            <div class="btn">
+      </div>
+      <p class="place-end"></p>
+    </scroll-view>
+    <div class="bottom">
+      <button class="left"
+              lang="zh_CN"
+              open-type="getUserInfo"
+              @getuserinfo="toMessage">说点啥吧</button>
+      <button class="right"
+              @tap="toForm">我要出席</button>
+    </div>
+    <div class="dialog"
+         v-show="isOpen">
+      <textarea focus="true"
+                maxlength="80"
+                class="desc"
+                placeholder="在这里输入您想要说的话"
+                name="textarea"
+                placeholder-style="color:#ccc;"
+                v-model="desc" />
+      <div class="btn">
                 <button class="left" @tap="sendMessage">发送留言</button>
                 <button class="right" @tap="cancel">取消</button>
             </div>
@@ -49,14 +63,14 @@
 </template>
 
 <script>
-// import HVideo from 'components/video'
+import HVideo from 'components/video'
 import HForm from 'components/form'
 import HFormlist from 'components/formlist'
 import tools from 'common/js/h_tools'
 export default {
   name: 'Message',
   components: {
-    // HVideo,
+    HVideo,
     HForm,
     HFormlist
   },
@@ -106,12 +120,19 @@ export default {
       const db = wx.cloud.database()
       const admin = db.collection('admin')
       admin.get().then(res => {
-        that.admin_openid = res.data[0].admin_openid
-        if (that.admin_openid === that.openId) {
-          that.del = true
-        } else {
-          that.del = false
+        that.del = false
+        for (var i = 0, len = res.data.length; i < len; i++) {
+          // console.log('res: ' + i + ' === ' + res.data[i].admin_openid)
+          // console.log('openId: ' + that.openId)
+          if (res.data[i].admin_openid === that.openId) {
+            that.del = true
+          }
         }
+        // if (that.admin_openid === that.openId) {
+        //   that.del = true
+        // } else {
+        //   that.del = false
+        // }
         console.log(that.del)
       })
     },
@@ -286,147 +307,147 @@ export default {
 
 <style scoped lang="stylus">
 .message
+  height 100%
+  width 100%
+  .box
     height 100%
+    background #F9E0D9
     width 100%
-    .box
-        height 100%
-        background #F9E0D9
-        width 100%
-        .place
-            height 20rpx
-        .place-end
-            height 160rpx
-        .item
-            width 630rpx
-            margin-left 30rpx
-            border-radius 16rpx
-            background #fff
-            display flex
-            justify-content center
-            align-items flex-start
-            padding 30rpx
-            margin-bottom 20rpx
-            .left
-                width 100rpx
-                height 100rpx
-                border-radius 50rpx
-            .right
-                display flex
-                flex-direction column
-                justify-content flex-start
-                min-height 100rpx
-                align-items flex-start
-                width 500rpx
-                margin-left 20rpx
-                .top
-                    height 40rpx
-                    width 100%
-                    display flex
-                    justify-content space-between
-                    align-items center
-                    .top-l
-                        height 50rpx
-                        line-height 50rpx
-                        color #444
-                        font-size 28rpx
-                    .top-r
-                        height 50rpx
-                        line-height 50rpx
-                        color #999
-                        font-size 24rpx
-                .con
-                    line-height 50rpx
-                    color #666
-                    font-size 28rpx
-                    white-space pre-wrap
-                    width 100%
-    .bottom
-        position fixed
-        bottom 0
-        left 0
-        height 160rpx
-        background rgba(255, 255, 255, 0.75)
-        width 100%
-        display flex
-        justify-content center
-        align-items center
-        .left, .right
-            height 80rpx
-            line-height 80rpx
-            font-size 28rpx
-            width 300rpx
-            color #fff
-            background #ED695D
-            margin 0 20rpx 0 0
-        .right
-            margin 0
-    .dialog
-        position fixed
-        bottom 0
-        left 0
-        z-index 99
-        background #fff
-        width 100%
-        textarea
-            height 200rpx
-            line-height 42rpx
-            font-size 30rpx
-            color #333
-            resize none
-            outline none
-            padding 30rpx
-            width 690rpx
-            background #f5f5f5
-            &::-webkit-input-placeholder
-                font-size 30rpx
-                color #999
-        .btn
-            height 120rpx
-            display flex
-            justify-content center
-            align-items center
-            .left, .right
-                height 80rpx
-                line-height 80rpx
-                font-size 28rpx
-                flex 2
-                color #fff
-                background #ED695D
-                margin 0 20rpx 0 30rpx
-            .right
-                flex 1
-    .video-dialog
-        position fixed
-        right 10rpx
-        top 200rpx
+    .place
+      height 20rpx
+    .place-end
+      height 160rpx
+    .item
+      width 630rpx
+      margin-left 30rpx
+      border-radius 16rpx
+      background #fff
+      display flex
+      justify-content center
+      align-items flex-start
+      padding 30rpx
+      margin-bottom 20rpx
+      .left
         width 100rpx
         height 100rpx
-        box-shadow 0 0 10rpx rgba(0, 0, 0, 0.1)
-        background #fff
-        border-radius 16rpx
-        image
-            width 100%
-            height 100%
-    .form-dialog
-        position fixed
-        right 10rpx
-        top 320rpx
-        width 100rpx
-        height 100rpx
-        box-shadow 0 0 10rpx rgba(0, 0, 0, 0.1)
-        background #fff
         border-radius 50rpx
-        image
-            width 100%
-            height 100%
-    .video, .form, .form-list
-        position fixed
-        top 0
-        bottom 0
-        left 0
-        right 0
-        background #fff
-        z-index 99
-    .form-list
-        background rgba(0, 0, 0, 0.5)
+      .right
+        display flex
+        flex-direction column
+        justify-content flex-start
+        min-height 100rpx
+        align-items flex-start
+        width 500rpx
+        margin-left 20rpx
+        .top
+          height 40rpx
+          width 100%
+          display flex
+          justify-content space-between
+          align-items center
+          .top-l
+            height 50rpx
+            line-height 50rpx
+            color #444
+            font-size 28rpx
+          .top-r
+            height 50rpx
+            line-height 50rpx
+            color #999
+            font-size 24rpx
+        .con
+          line-height 50rpx
+          color #666
+          font-size 28rpx
+          white-space pre-wrap
+          width 100%
+  .bottom
+    position fixed
+    bottom 0
+    left 0
+    height 160rpx
+    background rgba(255, 255, 255, 0.75)
+    width 100%
+    display flex
+    justify-content center
+    align-items center
+    .left, .right
+      height 80rpx
+      line-height 80rpx
+      font-size 28rpx
+      width 300rpx
+      color #fff
+      background #ED695D
+      margin 0 20rpx 0 0
+    .right
+      margin 0
+  .dialog
+    position fixed
+    bottom 0
+    left 0
+    z-index 99
+    background #fff
+    width 100%
+    textarea
+      height 200rpx
+      line-height 42rpx
+      font-size 30rpx
+      color #333
+      resize none
+      outline none
+      padding 30rpx
+      width 690rpx
+      background #f5f5f5
+      &::-webkit-input-placeholder
+        font-size 30rpx
+        color #999
+    .btn
+      height 120rpx
+      display flex
+      justify-content center
+      align-items center
+      .left, .right
+        height 80rpx
+        line-height 80rpx
+        font-size 28rpx
+        flex 2
+        color #fff
+        background #ED695D
+        margin 0 20rpx 0 30rpx
+      .right
+        flex 1
+  .video-dialog
+    position fixed
+    right 10rpx
+    top 200rpx
+    width 100rpx
+    height 100rpx
+    box-shadow 0 0 10rpx rgba(0, 0, 0, 0.1)
+    background #fff
+    border-radius 16rpx
+    image
+      width 100%
+      height 100%
+  .form-dialog
+    position fixed
+    right 10rpx
+    top 320rpx
+    width 100rpx
+    height 100rpx
+    box-shadow 0 0 10rpx rgba(0, 0, 0, 0.1)
+    background #fff
+    border-radius 50rpx
+    image
+      width 100%
+      height 100%
+  .video, .form, .form-list
+    position fixed
+    top 0
+    bottom 0
+    left 0
+    right 0
+    background #fff
+    z-index 99
+  .form-list
+    background rgba(0, 0, 0, 0.5)
 </style>
