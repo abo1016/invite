@@ -4,9 +4,13 @@
            :src="videoUrl"
            :danmu-list="danmuList"
            enable-danmu
+           vslide-gesture
+           vslide-gesture-in-fullscreen
+           enable-progress-gesture
+           show-center-play-btn
            danmu-btn
            controls
-           poster="视频封面地址"></video>
+           :poster="cover"></video>
     <div class="btn-area">
       <input @blur="bindInputBlur"
              placeholder="请输入临时弹幕，真实弹幕来自留言"
@@ -25,7 +29,8 @@ export default {
     return {
       inputValue: '',
       danmuList: [],
-      videoUrl: ''
+      videoUrl: '',
+      cover: ''
     }
   },
 
@@ -68,6 +73,7 @@ export default {
         state: true
       }).get().then(res => {
         that.videoUrl = res.data[0].videoUrl
+        that.cover = res.data[0].cover
       })
     },
 

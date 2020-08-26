@@ -16,7 +16,7 @@
             <div class="content">
                 <h1>Mr.Bo & Miss.Wen</h1>
                 <p>谨定于 2020年10月4日 （星期日）中午12:00</p>
-                <p>农历 八月二十八 中午十二点整 举办婚礼</p>
+                <p>农历 八月十八 中午十二点整 举办婚礼</p>
                 <p>席设：湖南省醴陵市外贸酒店二楼宴会厅</p>
                 <p>地址：湖南省醴陵市瓷城大道70号</p>
                 <image src="../../static/images/we.png" class="img_footer"/>

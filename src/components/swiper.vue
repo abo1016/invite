@@ -1,19 +1,24 @@
 <template>
-    <div class="box">
-        <swiper class="swiper"
+  <div class="box">
+    <swiper class="swiper"
             :autoplay="true"
             :circular="true"
             current=0
-            :indicator-dots="true"
-        >
-            <block v-for="(item, index) in list" :key="index">
-                <swiper-item class="item">
-                    <image mode="aspectFill" lazy-load="true" :src="item" class="slide-image"/>
-                </swiper-item>
-            </block>
-        </swiper>
-        <image v-if="isGif" class="img" src="../../static/images/save_the_date_pu.gif"/>
-    </div>
+            :indicator-dots="true">
+      <block v-for="(item, index) in list"
+             :key="index">
+        <swiper-item class="item">
+          <image mode="aspectFill"
+                 lazy-load="true"
+                 :src="item"
+                 class="slide-image" />
+        </swiper-item>
+      </block>
+    </swiper>
+    <image v-if="isGif"
+           class="img"
+           src="../../static/images/save_the_date_pu.gif" />
+  </div>
 </template>
 
 <script>
@@ -33,21 +38,23 @@ export default {
 
 <style lang="stylus" scoped>
 .box
-    position relative
+  position relative
+  height 100%
+  .swiper
     height 100%
-    .swiper
-        height 100%
+    width 100%
+    .item
+      width 100%
+      height 100%
+      image
         width 100%
-        .item
-            width 100%
-            height 100%
-            image
-                width 100%
-                height 100%
-                display block
-    .img
-        position absolute
-        bottom 50rpx
-        left 50rpx
-        z-index 99
+        height 100%
+        display block
+  .img
+    position absolute
+    bottom 50rpx
+    left 50rpx
+    z-index 99
+    width 30%
+    height 15%
 </style>
