@@ -42,24 +42,38 @@ export default {
       audioUrl: ''
     }
   },
+  onLoad () {
+    this.globalData.innerAudioContext.onEnded(this.onEnded)
+    this.globalData.innerAudioContext.onPlay(this.onPlay)
+    this.globalData.innerAudioContext.onPause(this.onPause)
+    this.getList()
+  },
   onShow () {
-    const that = this
-    that.audioCtx = wx.createAudioContext('myAudio')
-    that.isPlay = true
-    that.getList()
+    this.audioCtx = this.globalData.innerAudioContext
+    this.isPlay = !this.audioCtx.paused
   },
 
   methods: {
+    onPlay () {
+      this.isPlay = true
+    },
+    onPause () {
+      this.isPlay = false
+    },
+    onEnded () {
+      if (this.globalData.index >= this.globalData.musics.length) {
+        this.globalData.index = 0
+      }
+      this.globalData.innerAudioContext.src = this.globalData.musics[this.globalData.index].musicUrl
+      this.globalData.index += 1
+    },
     audioPlay () {
-      const that = this
-      if (that.isPlay) {
-        that.audioCtx.pause()
-        that.isPlay = false
-        tools.showToast('您已暂停音乐播放~')
-      } else {
-        that.audioCtx.play()
-        that.isPlay = true
+      if (this.audioCtx.paused) {
+        this.audioCtx.play()
         tools.showToast('背景音乐已开启~')
+      } else {
+        this.audioCtx.pause()
+        tools.showToast('您已暂停音乐播放~')
       }
     },
 
@@ -78,10 +92,9 @@ export default {
       const that = this
       const db = wx.cloud.database()
       const music = db.collection('music')
-      console.log(music.get())
       music.get().then(res => {
         console.log(res.data)
-        that.audioUrl = res.data[0].musicUrl
+        that.globalData.innerAudioContext.src = res.data[0].musicUrl
         that.audioCtx.play()
         // that.getList()
       })

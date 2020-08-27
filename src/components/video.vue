@@ -2,7 +2,7 @@
   <div class="section">
     <video id="myVideo"
            :src="videoUrl"
-           :danmu-list="danmuList"
+           :danmu-list="danmuList" @play="play" @ended="ended"
            enable-danmu
            vslide-gesture
            vslide-gesture-in-fullscreen
@@ -42,6 +42,18 @@ export default {
   },
 
   methods: {
+    play (e) {
+      this.musicPlay = false
+      if (!this.globalData.innerAudioContext.paused) {
+        this.musicPlay = true
+        this.globalData.innerAudioContext.pause()
+      }
+    },
+    ended (e) {
+      if (this.musicPlay) {
+        this.globalData.innerAudioContext.play()
+      }
+    },
     bindInputBlur (e) {
       let that = this
       that.inputValue = e.mp.detail.value

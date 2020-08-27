@@ -37,6 +37,14 @@ export default {
         content: '当前微信版本过低，无法使用该功能，请升级到最新微信版本后重试。'
       })
     }
+  },
+  onShow () {
+    if (this.globalData) {
+      this.globalData.innerAudioContext.play()
+    }
+  },
+  onError (err) {
+    console.log('error', err)
   }
 }
 </script>
@@ -44,7 +52,7 @@ export default {
 <style lang="stylus">
 @import '../static/font/iconfont.css'
 page
-    height 100%
+  height 100%
 image
-    display block
+  display block
 </style>

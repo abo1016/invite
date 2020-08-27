@@ -274,11 +274,19 @@ export default {
     toVideo () {
       const that = this
       that.isVideo = true
+      this.musicPlay = false
+      if (!this.globalData.innerAudioContext.paused) {
+        this.musicPlay = true
+        this.globalData.innerAudioContext.pause()
+      }
     },
 
     closeVideo () {
       const that = this
       that.isVideo = false
+      if (this.musicPlay) {
+        this.globalData.innerAudioContext.play()
+      }
     },
 
     lookList () {
