@@ -1,6 +1,6 @@
 <template>
     <div class="photo">
-        <h-swiper :list="list" :isGif="isGif"></h-swiper>
+        <h-swiper :list="list" :isGif="isGif" :interval="interval"></h-swiper>
     </div>
 </template>
 
@@ -21,7 +21,8 @@ export default {
   data () {
     return {
       list: [],
-      isGif: false
+      isGif: false,
+      interval: 2500
     }
   },
   methods: {

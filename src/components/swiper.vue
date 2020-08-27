@@ -4,6 +4,7 @@
             :autoplay="true"
             :circular="true"
             current=0
+            :interval="interval"
             :indicator-dots="true">
       <block v-for="(item, index) in list"
              :key="index">
@@ -24,7 +25,7 @@
 <script>
 export default {
   name: 'GoodSwiper',
-  props: ['list', 'isGif'],
+  props: ['list', 'isGif', 'interval'],
   watch: {
     isGif (newValue, oldValue) {
       const that = this

@@ -139,16 +139,22 @@ export default {
 
     delCom (id) {
       const that = this
-      const db = wx.cloud.database()
-      const message = db.collection('message')
-      message.where({
-        _id: id
-      }).update({
-        data: {
-          state: false
+      wx.showModal({
+        title: '提示',
+        content: '确认删除？',
+        success (res) {
+          const db = wx.cloud.database()
+          const message = db.collection('message')
+          message.where({
+            _id: id
+          }).update({
+            data: {
+              state: false
+            }
+          }).then(res => {
+            that.getMessageList()
+          })
         }
-      }).then(res => {
-        that.getMessageList()
       })
     },
 
@@ -306,7 +312,16 @@ export default {
         name: 'presentList',
         data: {}
       }).then(res => {
-        that.formList = res.result.data.reverse()
+        that.formList = res.result.data.reverse().map(x => {
+          return {
+            count: x.count,
+            desc: x.desc,
+            name: x.name,
+            phone: that.isAdmin ? x.phone : x.phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2'),
+            _id: x._id,
+            _openid: x._openid
+          }
+        })
       })
     }
   }

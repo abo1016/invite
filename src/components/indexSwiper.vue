@@ -4,6 +4,7 @@
             :autoplay="true"
             :circular="true"
             current=0
+            :interval=3000
             :indicator-dots="true"
             :vertical="true"
         >
