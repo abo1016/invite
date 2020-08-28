@@ -1,7 +1,15 @@
 <template>
-    <div class="photo">
-        <h-swiper :list="list" :isGif="isGif" :interval="interval"></h-swiper>
-    </div>
+  <div class="photo">
+    <image
+      class="bg-image"
+      :src="background"
+    />
+    <h-swiper
+      :list="list"
+      :isGif="isGif"
+      :interval="interval"
+    ></h-swiper>
+  </div>
 </template>
 
 <script>
@@ -22,7 +30,8 @@ export default {
     return {
       list: [],
       isGif: false,
-      interval: 2500
+      interval: 5000,
+      background: '../../static/images/poster.jpg'
     }
   },
   methods: {
@@ -31,15 +40,36 @@ export default {
       const db = wx.cloud.database()
       const banner = db.collection('indexBanner')
       banner.get().then(res => {
-        that.list = res.data[0].indexBanner
+        let list = []
+        for (let i = 0; i < res.data[0].indexBanner.length; i++) {
+          let show = i === 0
+          let index = that.randomNum()
+          list.push({
+            url: res.data[0].indexBanner[i],
+            show: show,
+            class: this.globalData.animations[index]
+          })
+        }
+        that.list = list
       })
+    },
+    randomNum () {
+      let minNum = 0
+      let maxNum = this.globalData.animations.length
+      let result = parseInt(Math.random() * (maxNum - minNum + 1) + minNum, 10)
+      while (this.lastRadom === result) {
+        result = parseInt(Math.random() * (maxNum - minNum + 1) + minNum, 10)
+      }
+      this.lastRadom = result
+      return result
     }
   }
 }
 </script>
 
 <style lang="stylus" scoped>
-.photo
-    height 100%
+.photo {
+  height: 100%;
+}
 </style>
 

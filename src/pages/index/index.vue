@@ -1,5 +1,6 @@
 <template>
     <div class="index">
+      <image class="bg-image" :src="background"/>
         <div class="bg-swiper">
             <index-swiper :list="list"></index-swiper>
         </div>
@@ -39,7 +40,17 @@ export default {
       isPlay: true,
       list: [],
       audioCtx: '',
-      audioUrl: ''
+      audioUrl: '',
+      background: '../../static/images/poster.jpg',
+      animations: [
+        'fadeInLeft',
+        'slideInDown',
+        'rotateInDownRight',
+        'rollIn',
+        'jackInTheBox',
+        'flip'
+      ]
+
     }
   },
   onLoad () {
@@ -82,10 +93,28 @@ export default {
       const db = wx.cloud.database()
       const banner = db.collection('banner')
       banner.get().then(res => {
-        that.list = res.data[0].bannerList
-        that.getMusicUrl()
-        console.log(that.list)
+        let list = []
+        for (let i = 0; i < res.data[0].bannerList.length; i++) {
+          let show = i === 0
+          let index = that.randomNum()
+          list.push({
+            url: res.data[0].bannerList[i],
+            show: show,
+            class: that.animations[index]
+          })
+        }
+        that.list = list
       })
+    },
+    randomNum () {
+      let minNum = 0
+      let maxNum = 5
+      let result = parseInt(Math.random() * (maxNum - minNum + 1) + minNum, 10)
+      while (this.lastRadom === result) {
+        result = parseInt(Math.random() * (maxNum - minNum + 1) + minNum, 10)
+      }
+      this.lastRadom = result
+      return result
     },
 
     getMusicUrl () {

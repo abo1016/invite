@@ -50,9 +50,43 @@ export default {
 </script>
 
 <style lang="stylus">
-@import '../static/font/iconfont.css'
-page
-  height 100%
-image
-  display block
+@import '../static/font/iconfont.css';
+
+page {
+  height: 100%;
+}
+
+image {
+  display: block;
+}
+
+.animate-ele-warp {
+  width: 100%;
+  height: 100%;
+  transform-origin: center top;
+  position: absolute;
+  z-index: 3;
+  transform: translate3d(0px, 0px, 3px);
+  pointer-events: none;
+
+  .animate-ele {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 20rpx;
+    top: 20rpx;
+    z-index: 3;
+    pointer-events: none;
+
+    .animate-img {
+      position: absolute;
+    }
+  }
+}
+
+.bg-image {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+}
 </style>
