@@ -41,14 +41,14 @@ export default {
       list: [],
       audioCtx: '',
       audioUrl: '',
-      background: '../../static/images/poster.jpg',
+      background: 'https://626f-bopop-9tl6z-1302950773.tcb.qcloud.la/bg/13243095017620363.png?sign=27ea4346159417831c2d34a1385369e5&t=1598621480',
       animations: [
         'fadeInLeft',
         'slideInDown',
         'rotateInDownRight',
         'rollIn',
         'jackInTheBox',
-        'flip'
+        'swing'
       ]
 
     }
@@ -77,6 +77,7 @@ export default {
       }
       this.globalData.innerAudioContext.src = this.globalData.musics[this.globalData.index].musicUrl
       this.globalData.index += 1
+      this.audioCtx.play()
     },
     audioPlay () {
       if (this.audioCtx.paused) {
@@ -96,7 +97,7 @@ export default {
         let list = []
         for (let i = 0; i < res.data[0].bannerList.length; i++) {
           let show = i === 0
-          let index = that.randomNum()
+          let index = 3
           list.push({
             url: res.data[0].bannerList[i],
             show: show,

@@ -18,7 +18,7 @@
               class="animate-ele animated"
               style="top: 0; left: 0; animation-delay: 0.2s;"
             >
-              <image :src="item.url" class="animate-img slide-image" lazy-load mode="aspectFill" />
+              <image :src="item.url" class="animate-img slide-image" mode="aspectFill" />
             </div>
           </div>
         </swiper-item>

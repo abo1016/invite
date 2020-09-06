@@ -31,7 +31,18 @@ export default {
       list: [],
       isGif: false,
       interval: 5000,
-      background: '../../static/images/poster.jpg'
+      background: '../../static/images/poster.jpg',
+      animations: [
+        'fadeInLeft',
+        'slideInDown',
+        'rotateInDownRight',
+        'rotateInDownLeft',
+        'rollIn',
+        'jackInTheBox',
+        'swing',
+        'fadeInLeft',
+        'fadeInRight'
+      ]
     }
   },
   methods: {
@@ -43,11 +54,11 @@ export default {
         let list = []
         for (let i = 0; i < res.data[0].indexBanner.length; i++) {
           let show = i === 0
-          let index = that.randomNum()
+          let index = parseInt(Math.random() * (8 - 7 + 1) + 7, 10)
           list.push({
             url: res.data[0].indexBanner[i],
             show: show,
-            class: this.globalData.animations[index]
+            class: this.animations[index]
           })
         }
         that.list = list
@@ -55,7 +66,7 @@ export default {
     },
     randomNum () {
       let minNum = 0
-      let maxNum = this.globalData.animations.length
+      let maxNum = this.globalData.animations.length - 1
       let result = parseInt(Math.random() * (maxNum - minNum + 1) + minNum, 10)
       while (this.lastRadom === result) {
         result = parseInt(Math.random() * (maxNum - minNum + 1) + minNum, 10)

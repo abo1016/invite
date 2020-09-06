@@ -3,8 +3,10 @@
     <swiper
       class="swiper"
       autoplay
-      :circular="true"
+      :duration=0
+      :circular=true
       :interval="interval"
+      :vertical=true
       @change="change"
       @animationfinish="animationfinish"
       :indicator-dots="true"
@@ -25,7 +27,6 @@
             >
               <image
                 mode="aspectFill"
-                lazy-load
                 :src="item.url"
                 class="animate-img slide-image"
               />

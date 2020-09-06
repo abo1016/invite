@@ -17,7 +17,7 @@
     </scroll-view>
     <div class="bottom">
       <button @getuserinfo="toMessage" class="left" lang="zh_CN" open-type="getUserInfo">说点啥吧</button>
-      <button @tap="toForm" class="right">我要出席</button>
+      <!-- <button @tap="toForm" class="right">我要出席</button> -->
     </div>
     <div class="dialog" v-show="isOpen">
       <textarea
@@ -37,9 +37,9 @@
     <div @tap="toVideo" class="video-dialog">
       <image src="../../static/images/video1.png" />
     </div>
-    <div @tap="lookList" class="form-dialog">
+    <!-- <div @tap="lookList" class="form-dialog">
       <image src="../../static/images/form.png" />
-    </div>
+    </div> -->
     <div class="video" v-show="isVideo">
       <h-video @closeVideo="closeVideo"></h-video>
     </div>
@@ -139,14 +139,9 @@ export default {
           content: '确认删除？',
           success (res) {
             if (res.confirm) {
-              const db = wx.cloud.database()
-              const message = db.collection('message')
-              message.where({
-                _id: id
-              }).update({
-                data: {
-                  state: false
-                }
+              wx.cloud.callFunction({
+                name: 'messageRm',
+                data: {id: id}
               }).then(res => {
                 that.getMessageList()
               })
