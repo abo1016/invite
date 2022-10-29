@@ -1,11 +1,13 @@
-# 婚礼邀请函
+
+## Notice
+
+需要结合Laf云开发一起使用
 
 ## Build Setup
 
 ```bash
 # 安装依赖
 yarn
-
 # 开发时构建
 npm run dev
 
