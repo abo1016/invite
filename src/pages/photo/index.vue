@@ -48,7 +48,7 @@ export default {
   methods: {
     getList () {
       const that = this
-      const db = wx.cloud.database()
+      const db = that.globalData.cloud.database()
       const banner = db.collection('indexBanner')
       banner.get().then(res => {
         let list = []

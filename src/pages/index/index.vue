@@ -41,7 +41,7 @@ export default {
       list: [],
       audioCtx: '',
       audioUrl: '',
-      background: 'https://626f-bopop-9tl6z-1302950773.tcb.qcloud.la/bg/13243095017620363.png?sign=27ea4346159417831c2d34a1385369e5&t=1598621480',
+      background: 'https://ouiygx-app.oss.lafyun.com/bg/13243095017620363.png',
       animations: [
         'fadeInLeft',
         'slideInDown',
@@ -91,7 +91,7 @@ export default {
 
     getList () {
       const that = this
-      const db = wx.cloud.database()
+      const db = that.globalData.cloud.database()
       const banner = db.collection('banner')
       banner.get().then(res => {
         let list = []
@@ -120,7 +120,7 @@ export default {
 
     getMusicUrl () {
       const that = this
-      const db = wx.cloud.database()
+      const db = that.globalData.cloud.database()
       const music = db.collection('music')
       music.get().then(res => {
         console.log(res.data)

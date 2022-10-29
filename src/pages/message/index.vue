@@ -139,9 +139,8 @@ export default {
           content: '确认删除？',
           success (res) {
             if (res.confirm) {
-              wx.cloud.callFunction({
-                name: 'messageRm',
-                data: {id: id}
+              that.globalData.cloud.invokeFunction('message_rm', {
+                id: id
               }).then(res => {
                 that.getMessageList()
               })
@@ -159,17 +158,16 @@ export default {
     sendMessage () {
       const that = this
       if (that.desc) {
-        const db = wx.cloud.database()
+        const db = that.globalData.cloud.database()
         const message = db.collection('message')
         message.add({
-          data: {
-            desc: that.desc,
-            type: 'message',
-            state: true,
-            time: that.getNowFormatDate(),
-            url: that.userInfo.avatarUrl,
-            name: that.userInfo.nickName
-          }
+          _openid: that.openId,
+          desc: that.desc,
+          type: 'message',
+          state: true,
+          time: that.getNowFormatDate(),
+          url: that.userInfo.avatarUrl,
+          name: that.userInfo.nickName
         }).then(res => {
           that.isOpen = false
           that.desc = ''
@@ -214,11 +212,11 @@ export default {
 
     getMessageList () {
       const that = this
-      wx.cloud.callFunction({
-        name: 'messageList',
-        data: {}
-      }).then(res => {
-        that.messageList = res.result.data.reverse()
+      that.globalData.cloud.invokeFunction(
+        'message_list',
+        {}
+      ).then(res => {
+        that.messageList = res.data.reverse()
       })
     },
 
@@ -234,7 +232,7 @@ export default {
 
     addUser () {
       const that = this
-      const db = wx.cloud.database()
+      const db = that.globalData.cloud.database()
       const user = db.collection('user')
       user.add({
         data: {
@@ -247,29 +245,53 @@ export default {
 
     getOpenId () {
       const that = this
-      wx.cloud.callFunction({
-        name: 'user',
-        data: {}
-      }).then(res => {
-        that.openId = res.result.openid
-        const db = wx.cloud.database()
-        const admin = db.collection('admin')
-        admin.get().then(res => {
-          for (var i = 0, len = res.data.length; i < len; i++) {
-            if (res.data[i].admin_openid === that.openId) {
-              that.isAdmin = true
-            }
+      wx.login({
+        success (res) {
+          if (res.code) {
+            console.log('js_code=' + res.code)
+            // 调用云函数
+            that.globalData.cloud.invokeFunction('wx_openid', {
+              code: res.code
+            }).then(result => {
+              that.openId = result.openid
+              const db = that.globalData.cloud.database()
+              const admin = db.collection('admin')
+              admin.get().then(res => {
+                for (var i = 0, len = res.data.length; i < len; i++) {
+                  if (res.data[i].admin_openid === that.openId) {
+                    that.isAdmin = true
+                  }
+                }
+                console.log(that.isAdmin)
+              })
+              // that.showDelete()
+              // that.getIsExist()
+            })
+          } else {
+            console.log('登录失败！' + res.errMsg)
           }
-          console.log(that.isAdmin)
-        })
-        // that.showDelete()
-        // that.getIsExist()
+        }
       })
+      // .then(res => {
+      //   that.openId = res.result.openid
+      //   const db = that.globalData.cloud.database()
+      //   const admin = db.collection('admin')
+      //   admin.get().then(res => {
+      //     for (var i = 0, len = res.data.length; i < len; i++) {
+      //       if (res.data[i].admin_openid === that.openId) {
+      //         that.isAdmin = true
+      //       }
+      //     }
+      //     console.log(that.isAdmin)
+      //   })
+      //   // that.showDelete()
+      //   // that.getIsExist()
+      // })
     },
 
     getIsExist () {
       const that = this
-      const db = wx.cloud.database()
+      const db = that.globalData.cloud.database()
       const user = db.collection('user')
       user.where({
         _openid: that.openId
@@ -311,10 +333,7 @@ export default {
 
     getFromlist () {
       const that = this
-      wx.cloud.callFunction({
-        name: 'presentList',
-        data: {}
-      }).then(res => {
+      that.globalData.cloud.invokeFunction('present_list').then(res => {
         that.formList = res.result.data.reverse().map(x => {
           return {
             count: x.count,

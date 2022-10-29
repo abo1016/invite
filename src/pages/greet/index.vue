@@ -40,7 +40,7 @@ export default {
         wx.getUserInfo({
           success: function (res) {
             that.userInfo = res.userInfo
-            that.getOpenId()
+            that._getOpenId()
           }
         })
       }
@@ -48,7 +48,7 @@ export default {
 
     addUser () {
       const that = this
-      const db = wx.cloud.database()
+      const db = that.globalData.cloud.database()
       const user = db.collection('user')
       user.add({
         data: {
@@ -59,20 +59,39 @@ export default {
       })
     },
 
-    getOpenId () {
+    _getOpenId () {
       const that = this
-      wx.cloud.callFunction({
-        name: 'user',
-        data: {}
-      }).then(res => {
-        that.openId = res.result.openid
-        that.getIsExist()
+      wx.login({
+        success (res) {
+          if (res.code) {
+            // 调用云函数
+            that.globalData.cloud.invokeFunction('wx_openid', {
+              code: res.code
+            }).then(result => {
+              that.openId = result.openid
+              that.getIsExist()
+            })
+          } else {
+            console.log('登录失败！' + res.errMsg)
+          }
+        }
       })
     },
 
+    // getOpenId () {
+    //   const that = this
+    //   wx.cloud.callFunction({
+    //     name: 'user',
+    //     data: {}
+    //   }).then(res => {
+    //     that.openId = res.result.openid
+    //     that.getIsExist()
+    //   })
+    // },
+
     getIsExist () {
       const that = this
-      const db = wx.cloud.database()
+      const db = that.globalData.cloud.database()
       const user = db.collection('user')
       user.where({
         _openid: that.openId
@@ -87,11 +106,8 @@ export default {
 
     getUserList () {
       const that = this
-      wx.cloud.callFunction({
-        name: 'userList',
-        data: {}
-      }).then(res => {
-        that.userList = res.result.data.reverse()
+      that.globalData.cloud.invokeFunction('user_list').then(res => {
+        that.userList = res.data.reverse()
       })
     }
   }

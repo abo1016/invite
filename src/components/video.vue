@@ -79,7 +79,7 @@ export default {
 
     getVideo () {
       const that = this
-      const db = wx.cloud.database()
+      const db = that.globalData.cloud.database()
       const video = db.collection('video')
       video.where({
         state: true
@@ -91,7 +91,7 @@ export default {
 
     getMessageList () {
       const that = this
-      const db = wx.cloud.database()
+      const db = that.globalData.cloud.database()
       const message = db.collection('message')
       message.where({
         state: true
