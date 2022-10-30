@@ -16,7 +16,8 @@
       <p class="place-end"></p>
     </scroll-view>
     <div class="bottom">
-      <button @getuserinfo="toMessage" class="left" lang="zh_CN" open-type="getUserInfo">说点啥吧</button>
+      <button @click="toMessage" class="left" lang="zh_CN">说点啥吧</button>
+      <!-- <button @getuserinfo="toMessage" class="left" lang="zh_CN" open-type="getUserInfo">说点啥吧</button> -->
       <!-- <button @tap="toForm" class="right">我要出席</button> -->
     </div>
     <div class="dialog" v-show="isOpen">
@@ -92,17 +93,25 @@ export default {
   methods: {
     toMessage (e) {
       const that = this
-      if (e.target.errMsg === 'getUserInfo:ok') {
-        // that.isOpen = true
-        wx.getUserInfo({
-          success: function (res) {
-            that.userInfo = res.userInfo
-            that.isOpen = true
-            // that.getOpenId()
-            that.getIsExist()
-          }
-        })
-      }
+      wx.getUserProfile({
+        desc: '需要获取您的头像并展示', // 声明获取用户个人信息后的用途，后续会展示在弹窗中，请谨慎填写
+        success: (res) => {
+          that.userInfo = res.userInfo
+          that.isOpen = true
+          console.log('userInfo' + res.userInfo)
+        }
+      })
+      // if (e.target.errMsg === 'getUserInfo:ok') {
+      //   // that.isOpen = true
+      //   wx.getUserInfo({
+      //     success: function (res) {
+      //       that.userInfo = res.userInfo
+      //       that.isOpen = true
+      //       // that.getOpenId()
+      //       // that.getIsExist()
+      //     }
+      //   })
+      // }
     },
 
     // showDelete () {
@@ -235,9 +244,7 @@ export default {
       const db = that.globalData.cloud.database()
       const user = db.collection('user')
       user.add({
-        data: {
-          user: that.userInfo
-        }
+        user: that.userInfo
       }).then(res => {
         console.log(res)
       })

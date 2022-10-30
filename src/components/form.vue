@@ -100,12 +100,10 @@ export default {
       const db = wx.cloud.database()
       const present = db.collection('present')
       present.add({
-        data: {
-          name: that.name,
-          phone: that.phone,
-          count: that.count,
-          desc: that.desc
-        }
+        name: that.name,
+        phone: that.phone,
+        count: that.count,
+        desc: that.desc
       }).then(res => {
         that.name = ''
         that.phone = ''

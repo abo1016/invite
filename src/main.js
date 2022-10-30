@@ -1,7 +1,7 @@
 import './animate.wxss'
 import Vue from 'vue'
 import App from './App'
-import { Cloud } from 'laf-client-sdk'
+// import { Cloud } from 'laf-client-sdk'
 
 Vue.config.productionTip = false
 App.mpType = 'app'
@@ -19,9 +19,11 @@ app.globalData.innerAudioContext = innerAudioContext
 app.globalData.musics = []
 app.globalData.index = 1
 
+const {Cloud} = require('laf-client-sdk')
+
 app.globalData.cloud = new Cloud({
   // the laf app server base url
-  baseUrl: 'https://ouiygx.lafyun.com:443',
+  baseUrl: 'https://ouiygx.lafyun.com',
   // the database proxy entry, `app` is the policy name which response for the security of database access
   dbProxyUrl: '/proxy/app',
   // getAccessToken: () => wx.getStorageSync('access_token'),

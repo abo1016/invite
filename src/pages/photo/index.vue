@@ -31,7 +31,7 @@ export default {
       list: [],
       isGif: false,
       interval: 5000,
-      background: '../../static/images/poster.jpg',
+      background: 'https://oss.lafyun.com/ouiygx-app/icon/poster.jpg',
       animations: [
         'fadeInLeft',
         'slideInDown',

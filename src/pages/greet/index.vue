@@ -1,6 +1,6 @@
 <template>
     <div class="greet">
-        <image class="head" src="../../static/images/heart-animation.gif"/>
+        <image class="head" src="https://oss.lafyun.com/ouiygx-app/icon/heart-animation.gif"/>
         <scroll-view
             scroll-y
             class="box"
@@ -12,7 +12,8 @@
         </scroll-view>
         <p class="count">已收到{{userList.length}}位好友送来的祝福</p>
         <div class="bottom">
-            <button class="left" lang="zh_CN" open-type="getUserInfo" @getuserinfo="sendGreet">送上祝福</button>
+            <button class="left" lang="zh_CN" @click="sendGreet">送上祝福</button>
+            <!-- <button class="left" lang="zh_CN" open-type="getUserInfo" @getuserinfo="sendGreet">送上祝福</button> -->
             <button class="right" open-type="share">分享喜悦</button> 
         </div>
     </div>
@@ -34,16 +35,25 @@ export default {
     that.getUserList()
   },
   methods: {
+
     sendGreet (e) {
       const that = this
-      if (e.target.errMsg === 'getUserInfo:ok') {
-        wx.getUserInfo({
-          success: function (res) {
-            that.userInfo = res.userInfo
-            that._getOpenId()
-          }
-        })
-      }
+      wx.getUserProfile({
+        desc: '需要获取您的头像并展示', // 声明获取用户个人信息后的用途，后续会展示在弹窗中，请谨慎填写
+        success: (res) => {
+          that.userInfo = res.userInfo
+          that._getOpenId()
+          console.log('userInfo' + res.userInfo)
+        }
+      })
+      // if (e.target.errMsg === 'getUserInfo:ok') {
+      //   wx.getUserInfo({
+      //     success: function (res) {
+      //       that.userInfo = res.userInfo
+      //       that._getOpenId()
+      //     }
+      //   })
+      // }
     },
 
     addUser () {
@@ -51,9 +61,8 @@ export default {
       const db = that.globalData.cloud.database()
       const user = db.collection('user')
       user.add({
-        data: {
-          user: that.userInfo
-        }
+        _openid: that.openId,
+        user: that.userInfo
       }).then(res => {
         that.getUserList()
       })
